@@ -11,7 +11,7 @@ Este guia explica como **remover instalações antigas do WSL**, configurar um a
 2. [🐧 Instalar e configurar o WSL](#-2-instalar-e-configurar-o-wsl)
 3. [🧱 Acessar o terminal Linux](#-3-acessar-o-terminal-linux)
 4. [🧰 Configuração do Git](#-4-configuração-do-git)
-5. [🗝️ Configuração de SSH](#️-5-configuração-de-ssh)
+5. [🗝️ Configuração de SSH para Github](#️-5-configuração-de-ssh-para-github)
 6. [✔ Boas práticas no WSL](#-6-boas-práticas-no-wsl)
 7. [💻 Usar o VSCode com o WSL](#-7-usar-o-vscode-com-o-wsl)
 8. [⚙️ Configuração avançada do WSL](#️-8-configuração-avançada-do-wsl)
@@ -210,7 +210,7 @@ git config --global credential.helper "/mnt/c/Program\ Files/Git/mingw64/bin/git
 
 ---
 
-## 🗝️ 5. Configuração de SSH
+## 🗝️ 5. Configuração de SSH para Github
 
 ### 5.1 — Gerar chave SSH
 
@@ -240,19 +240,98 @@ Copie toda a saída do terminal.
 
 ---
 
-### 5.3 — Adicionar chave ao GitHub
+### 5.3 — Adicionar chave ao GitHub (Autenticação)
 
 - Acesse as configurações de SSH keys: [https://github.com/settings/keys](https://github.com/settings/keys)
 - Clique em **New SSH key**
 - Preencha:
   - **Title**: Nome do dispositivo (ex: wsl-dev)
   - **Key**: Cole a chave pública copiada anteriormente
-  - **Key type**: Authentication Key
+  - **Key type**: **Authentication Key**
 - Clique em **Add SSH key**
 
 ---
 
-### 5.4 — Remover credenciais antigas do Windows Credential Manager
+### 5.4 — Adicionar a mesma chave ao GitHub (Assinatura)
+
+- Na mesma página de SSH keys: [https://github.com/settings/keys](https://github.com/settings/keys)
+- Clique em **New SSH key** novamente
+- Preencha:
+  - **Title**: Nome do dispositivo + signing (ex: wsl-dev-signing)
+  - **Key**: Cole a **mesma** chave pública utilizada anteriormente
+  - **Key type**: **Signing Key**
+- Clique em **Add SSH key**
+
+> 💡 **Nota:** O GitHub permite usar a mesma chave SSH para autenticação e assinatura de commits. Basta cadastrá-la duas vezes, uma com cada tipo.
+
+---
+
+### 5.5 — Testar a conexão SSH com o GitHub
+
+Verifique se a autenticação está funcionando:
+
+```bash
+ssh -T git@github.com
+```
+
+Se tudo estiver correto, você verá uma mensagem como:
+
+```
+Hi <seu-usuario>! You've successfully authenticated, but GitHub does not provide shell access.
+```
+
+---
+
+### 5.6 — Configurar o Git para assinar commits com SSH
+
+Defina o formato de assinatura como SSH:
+
+```bash
+git config --global gpg.format ssh
+```
+
+Defina a chave SSH que será usada para assinar:
+
+```bash
+git config --global user.signingkey ~/.ssh/id_ed25519.pub
+```
+
+Habilite a assinatura automática de commits:
+
+```bash
+git config --global commit.gpgsign true
+```
+
+Habilite a assinatura automática de tags (opcional):
+
+```bash
+git config --global tag.gpgsign true
+```
+
+---
+
+### 5.7 — Verificar a configuração
+
+Confirme que tudo foi configurado corretamente:
+
+```bash
+git config --global --get gpg.format
+git config --global --get user.signingkey
+git config --global --get commit.gpgsign
+```
+
+Faça um commit de teste e verifique a assinatura:
+
+```bash
+git log --show-signature -1
+```
+
+> ✅ Se o commit exibir **"Good signature"**, a assinatura está funcionando corretamente.
+> No GitHub, commits assinados aparecerão com o selo **Verified**.
+
+---
+
+### 5.8 — Remover credenciais antigas do Windows Credential Manager
 
 Para evitar conflitos com a nova chave SSH ou tokens:
 
