@@ -304,15 +304,6 @@ git config --global --get user.signingkey
 git config --global --get commit.gpgsign
 ```
 
-Faça um commit de teste e verifique a assinatura:
-
-```bash
-git log --show-signature -1
-```
-
-> ✅ Se o commit exibir **"Good signature"**, a assinatura está funcionando corretamente.
-> No GitHub, commits assinados aparecerão com o selo **Verified**.
-
 ---
 
 ### 5.7 — Remover credenciais antigas do Windows Credential Manager
