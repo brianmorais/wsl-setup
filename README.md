@@ -266,23 +266,7 @@ Copie toda a saída do terminal.
 
 ---
 
-### 5.5 — Testar a conexão SSH com o GitHub
-
-Verifique se a autenticação está funcionando:
-
-```bash
-ssh -T git@github.com
-```
-
-Se tudo estiver correto, você verá uma mensagem como:
-
-```
-Hi <seu-usuario>! You've successfully authenticated, but GitHub does not provide shell access.
-```
-
----
-
-### 5.6 — Configurar o Git para assinar commits com SSH
+### 5.5 — Configurar o Git para assinar commits com SSH
 
 Defina o formato de assinatura como SSH:
 
@@ -310,7 +294,7 @@ git config --global tag.gpgsign true
 
 ---
 
-### 5.7 — Verificar a configuração
+### 5.6 — Verificar a configuração
 
 Confirme que tudo foi configurado corretamente:
 
@@ -331,7 +315,7 @@ git log --show-signature -1
 
 ---
 
-### 5.8 — Remover credenciais antigas do Windows Credential Manager
+### 5.7 — Remover credenciais antigas do Windows Credential Manager
 
 Para evitar conflitos com a nova chave SSH ou tokens:
 
